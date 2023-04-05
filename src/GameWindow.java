@@ -1,27 +1,36 @@
 import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class GameWindow extends JFrame implements ActionListener{
 
     private JFrame j;
-    private JLabel label;
+    private JPanel p;
+    private Image image;
+    private int x;
+    private int y;
+
     public GameWindow(String display) {
-
+        x = 100;
+        y = 100;
+        int frameWidth = 500;
+        int frameHeight = 500;
         j = new JFrame(display);
-        j.setSize(300, 300);
-        j.setLocation(5, 5);
-        j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        label = new JLabel("Press WASD to move!", SwingConstants.CENTER);
-        //create new Font
-        Font font = new Font("Courier", Font.BOLD,16);
 
-        //set font for JLabel
-        label.setFont(font);
-        j.add(label);
         j.addKeyListener(new KeyTracker());
+        j.add(new CustomPaintComponent());
 
-        j.show();
+        String imageURL = "src/orange-fox-sprite.png";
+        image = Toolkit.getDefaultToolkit().getImage(imageURL);
+
+        j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        j.setSize(frameWidth, frameHeight);
+        j.setLocation(5, 5);
+        j.setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -31,19 +40,35 @@ public class GameWindow extends JFrame implements ActionListener{
     public class KeyTracker extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent e) {
+            j.repaint();
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_A) {
-                System.out.println("a key pressed");
+                x = x - 10;
+                j.repaint();
             }
             if (key == KeyEvent.VK_S) {
-                System.out.println("s key pressed");
+                y = y + 10;
+                j.repaint();
             }
             if (key == KeyEvent.VK_D) {
-                System.out.println("d key pressed");
+                x = x + 10;
+                j.repaint();
             }
             if (key == KeyEvent.VK_W) {
-                System.out.println("w key pressed");
+                y = y - 10;
+                j.repaint();
             }
+        }
+
+    }
+
+    public class CustomPaintComponent extends Component {
+
+        public void paint(Graphics g) {
+            System.out.println("Paint " + x + " " + y);
+            Graphics2D g2d = (Graphics2D)g;
+            System.out.println(image);
+            g2d.drawImage(image, x, y, null);
         }
 
     }
