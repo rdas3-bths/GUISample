@@ -5,14 +5,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 public class GameWindow extends JFrame implements ActionListener{
 
     private JFrame j;
     private JPanel p;
+    private JLabel textLabel;
     private Image image;
     private int x;
     private int y;
+    private int clickerCounter;
 
     public GameWindow(String display) {
         x = 100;
@@ -20,12 +23,10 @@ public class GameWindow extends JFrame implements ActionListener{
         int frameWidth = 500;
         int frameHeight = 500;
         j = new JFrame(display);
-
+        textLabel = new JLabel("Counter: " + clickerCounter);
+        clickerCounter = 0;
+        j.add(textLabel, BorderLayout.NORTH);
         j.addKeyListener(new KeyTracker());
-        j.add(new CustomPaintComponent());
-
-        String imageURL = "src/orange-fox-sprite.png";
-        image = Toolkit.getDefaultToolkit().getImage(imageURL);
 
         j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         j.setSize(frameWidth, frameHeight);
@@ -40,35 +41,10 @@ public class GameWindow extends JFrame implements ActionListener{
     public class KeyTracker extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent e) {
-            j.repaint();
-            int key = e.getKeyCode();
-            if (key == KeyEvent.VK_A) {
-                x = x - 10;
-                j.repaint();
+            if (e.getKeyCode() == 10) {
+                clickerCounter++;
+                textLabel.setText("Counter: " + clickerCounter);
             }
-            if (key == KeyEvent.VK_S) {
-                y = y + 10;
-                j.repaint();
-            }
-            if (key == KeyEvent.VK_D) {
-                x = x + 10;
-                j.repaint();
-            }
-            if (key == KeyEvent.VK_W) {
-                y = y - 10;
-                j.repaint();
-            }
-        }
-
-    }
-
-    public class CustomPaintComponent extends Component {
-
-        public void paint(Graphics g) {
-            System.out.println("Paint " + x + " " + y);
-            Graphics2D g2d = (Graphics2D)g;
-            System.out.println(image);
-            g2d.drawImage(image, x, y, null);
         }
 
     }
